@@ -1,2 +1,2 @@
 # engcalc
-The 1,000,001th
+The 1,000,001st calculator for engineering and machining
