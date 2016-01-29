@@ -1,6 +1,83 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<script language='javascript' src='http://cdnjs.cloudflare.com/ajax/libs/mathjs/2.6.0/math.min.js'></script>
+		<script language='javascript'>
+			var knurl = function() {
+				var left_unit = Function('a',document.getElementById('knurl_unit_left').value);
+				var left = left_unit(Number(document.getElementById('knurl_left').value));
+				var right_unit = Function('a',document.getElementById('knurl_unit_right').value);
+				var right = right_unit(Number(document.getElementById('knurl_right').value));
+				var output = document.getElementById('knurl_output');
+				var output_unit = Function('a',document.getElementById('knurl_unit_output').value);
+
+				output.value = output_unit(Math.floor(left*Math.PI/right)*right/Math.PI);
+			}
+
+
+			var ssp = function() {
+				var left_unit = Function('a',document.getElementById('ssp_unit_left').value);
+				var left = left_unit(Number(document.getElementById('ssp_left').value));
+				var right_unit = Function('a',document.getElementById('ssp_unit_right').value);
+				var right = right_unit(Number(document.getElementById('ssp_right').value));
+				var output = document.getElementById('ssp_output');
+				var output_unit = Function('a',document.getElementById('ssp_unit_output').value);
+
+
+				output.value = output_unit((left/2)*right);
+			}
+
+			var easterEgg = function() {
+				var e = document.getElementById('easteregg');
+				if(Number(document.getElementById('rounding_msd').value) > 4) {
+					e.innerHTML = '(DISCLAIMER: If you\'re working to these kinds of tolerences, you probably shouldn\'t be using this calculator, any additional precision is basically noise from my conversion factors. Godspeed to you.)';
+				} else {
+					e.innerHTML = '';
+				}
+			}
+		</script>
+	</head>
 	<body>
-		blah
+		<div>
+			Rouding: <input type='number' id='rounding_msd' value='2' onChange='easterEgg()'> most significant digits <span id='easteregg'></span>
+		</div>
+		<div>
+			Stock size: <input type='text' id='knurl_left'>
+			<select id='knurl_unit_left'>
+				<option value='return a'>Meters</option>
+				<option value='return a/39.3701'>Inches</option>
+			</select>
+			Knurl pitch: <input type='text' id='knurl_right'>
+			<select id='knurl_unit_right'>
+				<option value='return a'>Meters</option>
+				<option value='return 1/a'>Inverse meters</option>
+				<option value='return a/39.3701'>Inches</option>
+				<option value='return (1/a)/39.3701'>Inverse inches</option>
+			</select>
+			Final size:	<input type='text' id='knurl_output'>
+			<select id='knurl_unit_output'>
+				<option value='return a'>Meters</option>
+				<option value='return a*39.3701'>Inches</option>
+			</select>
+			<input type='button' value='Calculate' onClick='knurl()'>
+		</div>
+		<div>
+			Stock size: <input type='text' id='ssp_left'>
+			<select id='ssp_unit_left'>
+				<option value='return a'>Meters</option>
+				<option value='return a/39.3701'>Inches</option>
+			</select>
+			Spindle speed: <input type='text' id='ssp_right'>
+			<select id='ssp_unit_right'>
+				<option value='return a'>Radians per second</option>
+				<option value='return (Math.PI*a)/30'>RPM (Rotations per minute)</option>
+			</select>
+			Surface speed: <input type='text' id='ssp_output'>
+			<select id='ssp_unit_output'>
+				<option value='return a'>Meters per second</option>
+				<option value='return (25000*a)/127'>Feet per minute</option>
+			</select>
+			<input type='button' value='Calculate' onClick='ssp()'>
+		</div>
 	</body>
 </html>
