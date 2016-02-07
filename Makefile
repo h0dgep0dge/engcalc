@@ -1,2 +1,0 @@
-all:
-	tsc calculator.ts
