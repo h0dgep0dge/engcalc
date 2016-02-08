@@ -72,13 +72,14 @@ class calculator {
 var millimeters = new unit('Millimeters',function(a:number) {return a/1000;},function(a:number) {return a*1000;});
 var meters = new unit('Meters',function(a:number) {return a;},function(a:number) {return a;});
 var inches = new unit('Inches',function(a:number) {return 127*a/5000;},function(a:number) {return 5000*a/127;});
+var feet = new unit('Feet',function(a:number) {return 381*a/1250;},function(a:number) {return 1250*a/381;});
 
-var distance:unit[] = [millimeters,meters,inches];
+var distance:unit[] = [millimeters,meters,inches,feet];
 
 var inverseMeters = new unit('Inverse meters',function(a:number) {return 1/a;},function(a:number) {return 1/a;});
 var inverseInches = new unit('Inverse inches',function(a:number) {return 127*(1/a)/5000;},function(a:number) {return 1/(5000*a/127);});
 
-var pitch:unit[] = [millimeters,meters,inverseMeters,inches,inverseInches];
+var pitch:unit[] = distance.concat([inverseMeters,inverseInches]);
 
 var radiansPerSecond = new unit('Radians per second',function(a:number) {return a;},function(a:number) {return a;});
 var rotationsPerMinute = new unit('RPM',function(a:number) {return Math.PI*a/30},function(a:number) {return a/Math.PI*30});

@@ -1,2 +1,2 @@
-all:
+calculator.js:
 	tsc calculator.ts
