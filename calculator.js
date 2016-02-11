@@ -40,16 +40,13 @@ var measure = (function () {
     measure.prototype.getValue = function () {
         return this.converter.convertFrom(this.getInput());
     };
-    measure.prototype.putValue = function (value) {
-        this.putOutput(this.converter.convertTo(value));
+    measure.prototype.putValue = function (value, round) {
+        this.putOutput(round(this.converter.convertTo(value)));
     };
     return measure;
 })();
 var calculator = (function () {
-    function calculator(inputs, output, calc, parent) {
-        this.inputs = inputs;
-        this.output = output;
-        this.calc = calc;
+    function calculator(inputs, output, calc, round, parent) {
         var div = document.createElement('div');
         var button = document.createElement('input');
         button.setAttribute('type', 'button');
@@ -63,7 +60,7 @@ var calculator = (function () {
             for (var i = 0; i < inputs.length; i++) {
                 vlist.push(inputs[i].getValue());
             }
-            output.putValue(calc(vlist));
+            output.putValue(calc(vlist), round);
         });
         div.appendChild(button);
         parent.appendChild(div);
@@ -84,4 +81,7 @@ var axialVelocity = [radiansPerSecond, rotationsPerMinute];
 var metersPerSecond = new unit('Meters per second', function (a) { return a; }, function (a) { return a; });
 var feetPerMinute = new unit('Feet per minute', function (a) { return (127 * a) / 25000; }, function (a) { return (25000 * a) / 127; });
 var linearVelocity = [metersPerSecond, feetPerMinute];
-var unitCategories = [distance, pitch, axialVelocity, linearVelocity];
+var celcius = new unit('Degrees celcius', function (a) { return a; }, function (a) { return a; });
+var fahrenheit = new unit('Degrees fahrenheit', function (a) { return a / 2; }, function (a) { return ((9 / 5) * (a + (5463 / 20)) - (45967 / 100)); });
+var temperature = [celcius, fahrenheit];
+var unitCategories = [distance, pitch, axialVelocity, linearVelocity, temperature];
