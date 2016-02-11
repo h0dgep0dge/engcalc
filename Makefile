@@ -1,2 +1,2 @@
-calculator.js:
-	tsc calculator.ts
+calculator.js: calculator.ts
+	tsc --noEmitOnError calculator.ts
