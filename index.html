@@ -2,8 +2,15 @@
 <html>
 	<head></head>
 	<body>
+    <input type='number' id='precision' value='3'>
     <script language='javascript' src='calculator.js'></script>
     <script language='javascript'>
+      var round = function(n,precision) {return Math.round(n*Math.pow(10,precision))/Math.pow(10,precision)};
+        // A straight forward arb-precision rounding function, implemented here for portability
+        // There's no reason you couldn't use a less portable solution, if you so wish.
+
+      var r = function(n) {return round(n,Number(document.getElementById('precision').value));}
+
       new calculator([
         new measure('Stock diameter',distance),
         new measure('Knurl pitch',pitch)
@@ -11,7 +18,7 @@
       new measure('Final diameter',distance),
       function(v) {
         return Math.floor(v[0]*Math.PI/v[1])*v[1]/Math.PI;
-      },document.body);
+      },r,document.body);
 
       new calculator([
         new measure('Stock diameter',distance),
@@ -20,7 +27,7 @@
       new measure('Surface speed',linearVelocity),
       function(v) {
         return v[0]/2*v[1];
-      },document.body);
+      },r,document.body);
 
       new calculator([
         new measure('Stock diameter',distance),
@@ -29,14 +36,14 @@
       new measure('Spindle speed',axialVelocity),
       function(v) {
         return v[1]*2/v[0];
-      },document.body);
+      },r,document.body);
 
       for(var i = 0;i < unitCategories.length;i++) {
         new calculator([
           new measure('From',unitCategories[i])
         ],
         new measure('To',unitCategories[i]),
-        function(v) {return v;},
+        function(v) {return v[0];},r,
         document.body);
       }
     </script>
