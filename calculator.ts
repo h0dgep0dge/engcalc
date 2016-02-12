@@ -69,13 +69,35 @@ class calculator {
     }
 }
 
+class converter extends calculator {
+    public swap:()=>void;
+
+    constructor(type:unit[],round:(v:number)=>number,parent:HTMLElement) {
+        var p = document.createElement('div');
+        parent.appendChild(p);
+        var swapper = document.createElement('input');
+        swapper.setAttribute('type','button');
+        swapper.setAttribute('value','Swap');
+        var left = new measure('From',type);
+        var right = new measure('To',type);
+        super([left],right,function(v) {return v[0];},round,p);
+        //p.appendChild(swapper);
+        swapper.addEventListener('onclick',function() {
+            var l = left.select.selectedIndex;
+            var r = right.select.selectedIndex;
+            left.select.selectedIndex = r;
+            right.select.selectedIndex = l;
+        });
+    }
+}
+
 var millimeters = new unit('Millimeters',function(a:number) {return a/1000;},function(a:number) {return a*1000;});
 var meters = new unit('Meters',function(a:number) {return a;},function(a:number) {return a;});
 var microns = new unit('Microns',function(a:number) {return a/(1000*1000);},function(a:number) {return a*(1000*1000);});
 var inches = new unit('Inches',function(a:number) {return 127*a/5000;},function(a:number) {return 5000*a/127;});
 var feet = new unit('Feet',function(a:number) {return 381*a/1250;},function(a:number) {return 1250*a/381;});
 
-var distance:unit[] = [millimeters,meters,inches,feet,microns];
+var distance:unit[] = [millimeters,meters,microns,inches,feet];
 
 var inverseMeters = new unit('Inverse meters',function(a:number) {return 1/a;},function(a:number) {return 1/a;});
 var inverseInches = new unit('Inverse inches',function(a:number) {return 127*(1/a)/5000;},function(a:number) {return 1/(5000*a/127);});
@@ -92,9 +114,18 @@ var feetPerMinute = new unit('Feet per minute',function(a) {return (127*a)/25000
 
 var linearVelocity:unit[] = [metersPerSecond,feetPerMinute];
 
-var celcius = new unit('Degrees celcius',function(a) {return a;},function(a) {return a;});
-var fahrenheit = new unit('Degrees fahrenheit',function(a) {return (5/9*(a+45967/100)-5463/20);},function(a) {return ((9/5)*(a+(5463/20))-(45967/100));});
+var celsius = new unit('Degrees celsius',function(a) {return a;},function(a) {return a;});
+var fahrenheit = new unit('Degrees fahrenheit',function(a) {return (a-32)*(5/9);},function(a) {return a*(9/5)+32;});
+var kelvin = new unit('Kelvin',function(a) {return a-273.15;},function(a) {return a+273.15;});
+var rankine = new unit('Rankine',function(a) {return fahrenheit.convertFrom(a-459.67);},function(a) {return fahrenheit.convertTo(a)+459.67;});
 
-var temperature:unit[] = [celcius,fahrenheit];
+var temperature:unit[] = [celsius,fahrenheit,kelvin,rankine];
 
-var unitCategories:unit[][] = [distance,pitch,axialVelocity,linearVelocity,temperature];
+var kilograms = new unit('Kilograms',function(a) {return a;},function(a) {return a;});
+var grams = new unit('Grams',function(a) {return a/1000;},function(a) {return a*1000;});
+var pounds = new unit('Pounds',function(a) {return (45359237*a)/100000000;},function(a) {return (100000000*a)/45359237;});
+var ounces = new unit('Ounces',function(a) {return pounds.convertFrom(a/16);},function(a) {return pounds.convertTo(a*16);});
+
+var mass:unit[] = [kilograms,grams,pounds,ounces];
+
+var unitCategories:unit[][] = [distance,pitch,axialVelocity,linearVelocity,temperature,mass];
