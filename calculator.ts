@@ -3,7 +3,8 @@ class unit {
 }
 
 class measure {
-    private input:HTMLElement;
+    public input:HTMLInputElement;
+    public select:HTMLSelectElement;
     public self:HTMLElement;
     private converter:unit;
     private getInput:()=>number;
@@ -36,6 +37,8 @@ class measure {
         n.appendChild(i);
         n.appendChild(s);
         this.self = n;
+        this.input = i;
+        this.select = s;
     }
 
     getValue() {
@@ -81,12 +84,14 @@ class converter extends calculator {
         var left = new measure('From',type);
         var right = new measure('To',type);
         super([left],right,function(v) {return v[0];},round,p);
-        //p.appendChild(swapper);
-        swapper.addEventListener('onclick',function() {
+        p.appendChild(swapper);
+        swapper.addEventListener('click',function() {
             var l = left.select.selectedIndex;
             var r = right.select.selectedIndex;
             left.select.selectedIndex = r;
+            (<any>left.select).selectedOptions[0].update();
             right.select.selectedIndex = l;
+            (<any>right.select).selectedOptions[0].update();
         });
     }
 }
