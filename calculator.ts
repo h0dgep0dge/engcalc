@@ -51,8 +51,10 @@ class measure {
 }
 
 class calculator {
+    public self:HTMLElement;
     constructor(inputs:measure[],output:measure,calc:(v:number[])=>number,round:(v:number)=>number,parent:HTMLElement) {
         var div = document.createElement('div');
+        this.self = div;
         var button = document.createElement('input');
         button.setAttribute('type','button');
         button.setAttribute('value','Calculate');
@@ -76,15 +78,13 @@ class converter extends calculator {
     public swap:()=>void;
 
     constructor(type:unit[],round:(v:number)=>number,parent:HTMLElement) {
-        var p = document.createElement('div');
-        parent.appendChild(p);
         var swapper = document.createElement('input');
         swapper.setAttribute('type','button');
         swapper.setAttribute('value','Swap');
         var left = new measure('From',type);
         var right = new measure('To',type);
-        super([left],right,function(v) {return v[0];},round,p);
-        p.appendChild(swapper);
+        super([left],right,function(v) {return v[0];},round,parent);
+        this.self.appendChild(swapper);
         swapper.addEventListener('click',function() {
             var l = left.select.selectedIndex;
             var r = right.select.selectedIndex;
