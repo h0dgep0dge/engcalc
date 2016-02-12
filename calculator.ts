@@ -92,7 +92,7 @@ var feetPerMinute = new unit('Feet per minute',function(a) {return (127*a)/25000
 var linearVelocity:unit[] = [metersPerSecond,feetPerMinute];
 
 var celcius = new unit('Degrees celcius',function(a) {return a;},function(a) {return a;});
-var fahrenheit = new unit('Degrees fahrenheit',function(a) {return a/2;},function(a) {return ((9/5)*(a+(5463/20))-(45967/100)) ;});
+var fahrenheit = new unit('Degrees fahrenheit',function(a) {return (5/9*(a+45967/100)-5463/20);},function(a) {return ((9/5)*(a+(5463/20))-(45967/100));});
 
 var temperature:unit[] = [celcius,fahrenheit];
 
