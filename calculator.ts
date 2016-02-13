@@ -101,8 +101,9 @@ var meters = new unit('Meters',function(a:number) {return a;},function(a:number)
 var microns = new unit('Microns',function(a:number) {return a/(1000*1000);},function(a:number) {return a*(1000*1000);});
 var inches = new unit('Inches',function(a:number) {return 127*a/5000;},function(a:number) {return 5000*a/127;});
 var feet = new unit('Feet',function(a:number) {return 381*a/1250;},function(a:number) {return 1250*a/381;});
+var thousanths = new unit('Thousanths of an inch',function(a:number) {return inches.convertFrom(a/1000);},function(a:number) {return inches.convertTo(a)*1000;});
 
-var distance:unit[] = [millimeters,meters,microns,inches,feet];
+var distance:unit[] = [millimeters,meters,microns,inches,feet,thousanths];
 
 var inverseMeters = new unit('Inverse meters',function(a:number) {return 1/a;},function(a:number) {return 1/a;});
 var inverseInches = new unit('Inverse inches',function(a:number) {return 127*(1/a)/5000;},function(a:number) {return 1/(5000*a/127);});
