@@ -1,7 +1,7 @@
 class unit {
 	constructor(public label:string,public convertFrom:(input:number)=>number,public convertTo:(input:number)=>number) {}
 	
-	createInput():any {
+	createField():any {
 		var i = document.createElement('input');
 		i.setAttribute('type','text');
 		return [i,function() {return Number(i.value);},function(value:number) {i.value = String(value);}];
@@ -14,11 +14,11 @@ interface labelledNumber {
 }
 
 class dropdownUnit extends unit {
-	constructor(label:string,convertFrom:(input:number)=>number,private options:labelledNumber[]) {
-		super(label,convertFrom,function(a) {return a;});
+	constructor(label:string,converter:unit,private options:labelledNumber[]) {
+		super(label,converter.convertFrom,converter.convertTo);
 	}
 	
-	createInput():any {
+	createField():any {
 		var i = document.createElement('select');
 		for(var z:number = 0;z < this.options.length;z++) {
 			var o = document.createElement('option');
@@ -52,7 +52,7 @@ class measure {
 			tmp.update = function(a) {
 				return function() {
 					t.converter = dimension[a];
-					var inputInstance = dimension[a].createInput();
+					var inputInstance = dimension[a].createField();
 					t.input = inputInstance[0];
 					t.getInput = inputInstance[1];
 					t.putOutput = inputInstance[2];
@@ -137,10 +137,12 @@ var distance:unit[] = [millimeters,meters,microns,inches,feet,thousanths];
 
 var inverseMeters = new unit('Inverse meters',function(a:number) {return 1/a;},function(a:number) {return 1/a;});
 var inverseInches = new unit('Inverse inches',function(a:number) {return 127*(1/a)/5000;},function(a:number) {return 1/(5000*a/127);});
-var metricCoarseThreads = new dropdownUnit('Coarse M thread pitches',millimeters.convertFrom,[{label:'M1.60',value:0.35},{label:'M2',value:0.40},{label:'M2.50',value:0.45},{label:'M3',value:0.50},{label:'M3.50',value:0.60},{label:'M4',value:0.70},{label:'M5',value:0.80},{label:'M6',value:1},{label:'M8',value:1.25},{label:'M10',value:1.50},{label:'M12',value:1.75},{label:'M14',value:2},{label:'M16',value:2},{label:'M20',value:2.50},{label:'M22',value:2.50},{label:'M24',value:3},{label:'M27',value:3},{label:'M30',value:3.50},{label:'M36',value:4},{label:'M42',value:4.50},{label:'M48',value:5},{label:'M56',value:5.50},{label:'M64',value:6},{label:'M68',value:6}]);
-var USCThreads = new dropdownUnit('Coarse UTS thread pitches',inverseInches.convertFrom,[{label:'#1',value:64},{label:'#2',value:56},{label:'#3',value:48},{label:'#4',value:40},{label:'#5',value:40},{label:'#6',value:32},{label:'#8',value:32},{label:'#10',value:24},{label:'#12',value:24},{label:'1\u20444',value:20},{label:'5\u204416',value:18},{label:'3\u20448',value:16},{label:'7\u204416',value:14},{label:'1\u20442',value:13},{label:'9\u204416',value:12},{label:'5\u20448',value:11},{label:'3\u20444',value:10},{label:'7\u20448',value:9},{label:'1',value:8}]);
+var metricCoarseThreads = new dropdownUnit('Coarse M thread pitches',millimeters,[{label:'M1.60',value:0.35},{label:'M2',value:0.40},{label:'M2.50',value:0.45},{label:'M3',value:0.50},{label:'M3.50',value:0.60},{label:'M4',value:0.70},{label:'M5',value:0.80},{label:'M6',value:1},{label:'M8',value:1.25},{label:'M10',value:1.50},{label:'M12',value:1.75},{label:'M14',value:2},{label:'M16',value:2},{label:'M20',value:2.50},{label:'M22',value:2.50},{label:'M24',value:3},{label:'M27',value:3},{label:'M30',value:3.50},{label:'M36',value:4},{label:'M42',value:4.50},{label:'M48',value:5},{label:'M56',value:5.50},{label:'M64',value:6},{label:'M68',value:6}]);
+var UNCThreads = new dropdownUnit('Coarse UTS thread pitches',inverseInches,[{label:'#1',value:64},{label:'#2',value:56},{label:'#3',value:48},{label:'#4',value:40},{label:'#5',value:40},{label:'#6',value:32},{label:'#8',value:32},{label:'#10',value:24},{label:'#12',value:24},{label:'1\u20444',value:20},{label:'5\u204416',value:18},{label:'3\u20448',value:16},{label:'7\u204416',value:14},{label:'1\u20442',value:13},{label:'9\u204416',value:12},{label:'5\u20448',value:11},{label:'3\u20444',value:10},{label:'7\u20448',value:9},{label:'1',value:8}]);
+var UNFThreads = new dropdownUnit('Fine UTS thread pitches',inverseInches,[{label:"#0",value:80},{label:"#1",value:72},{label:"#2",value:64},{label:"#3",value:56},{label:"#4",value:48},{label:"#5",value:44},{label:"#6",value:40},{label:"#8",value:36},{label:"#10",value:32},{label:"#12",value:28},{label:"1\u20444",value:28},{label:"5\u204416",value:24},{label:"3\u20448",value:24},{label:"7\u204416",value:20},{label:"1\u20442",value:20},{label:"9\u204416",value:18},{label:"5\u20448",value:18},{label:"3\u20444",value:16},{label:"7\u20448",value:14},{label:"1",value:12}]);
+var UNEFThreads = new dropdownUnit('Extra fine UTS thread pitches',inverseInches,[{label:"#12",value:32},{label:"1\u20444",value:32},{label:"5\u204416",value:32},{label:"3\u20448",value:32},{label:"7\u204416",value:28},{label:"1\u20442",value:28},{label:"9\u204416",value:24},{label:"5\u20448",value:24},{label:"3\u20444",value:20},{label:"7\u20448",value:20},{label:"1",value:20}]);
 
-var pitch:unit[] = distance.concat([inverseMeters,inverseInches,metricCoarseThreads,USCThreads]);
+var pitch:unit[] = distance.concat([inverseMeters,inverseInches,metricCoarseThreads,UNCThreads,UNFThreads,UNEFThreads]);
 
 var radiansPerSecond = new unit('Radians per second',function(a:number) {return a;},function(a:number) {return a;});
 var rotationsPerMinute = new unit('RPM',function(a:number) {return Math.PI*a/30},function(a:number) {return a/Math.PI*30});
